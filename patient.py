@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # create a person class and then a patient class that will inherit it
 class Person:
   def __init__(self, fname, lname, gender, age):
@@ -9,6 +11,7 @@ class Person:
   def fullname(self):
     return '{} {}'.format(self.fname, self.lname)
 
+
   # class method as alternative constructor
   @classmethod
   def from_string(cls, pe_str):
@@ -17,7 +20,7 @@ class Person:
   
 # class inheritance 
 class Patient(Person):
-  def __init__(self, fname, lname, gender, age, ID, weight, height, btemp, s_bp, d_bp, pulse):
+  def __init__(self, fname, lname, gender, age, ID, weight, height, btemp, s_bp, d_bp, pulse, cdict):
     super().__init__(fname, lname, gender, age) # single inheritance
     Patient.ID = ID
     Patient.height = height
@@ -26,46 +29,50 @@ class Patient(Person):
     Patient.s_bp = s_bp
     Patient.d_bp = d_bp
     Patient.pulse = pulse
+    Patient.cdict = {}
   
   @property
   def BMI(self):
     calc = self.weight / (self.height)**2
     if calc < 18.5:
-      return 'BMI: ' + str(round(calc,2)) + ' - Underweight'
+      s = ' - Underweight'
     elif calc < 24.9:
-      return 'BMI: ' + str(round(calc,2)) + ' - Normal Weight'
+      s = ' - Normal Weight'
     elif calc < 29.9:
-      return 'BMI: ' + str(round(calc,2)) + ' - Pre-obesity'
+      s = '- Pre-obesity'
     elif calc < 34.9:
-      return 'BMI: ' + str(round(calc,2)) + ' - Obesity class I'   
+      s = ' - Obesity class I'
     elif calc < 39.9:
-      return 'BMI: ' + str(round(calc,2)) + ' - Obesity class II'
+      s = ' - Obesity class II'
     else:
-      return 'BMI: ' + str(round(calc,2)) + ' - Obesity class III'
+      s = ' - Obesity class III'
+    return 'BMI: ' + str(round(calc,2)) + s
 
   @property
   def btemp_classification(self):
     if self.btemp < 35:
-      return 'Body Temp: ' + str(round(self.btemp,2)) + ' - Hypothermia'
+      s = ' - Hypothermia'
     elif self.btemp < 37.6:
-      return 'Body Temp: ' + str(round(self.btemp,2)) + ' - Normal Body Temperature'
+      s = ' - Normal Body Temperature'
     elif self.btemp < 38.3:
-      return 'Body Temp: ' + str(round(self.btemp,2)) + ' - Fever/Hypethermia'
+      s = ' - Fever/Hypethermia'
     else:
-      return 'Body Temp: ' + str(round(self.btemp,2)) + ' - Hyperpyrexia'
+      s = ' - Hyperpyrexia'
+    return 'Body Temp: ' + str(round(self.btemp,2)) + s
     
   @property
   def bp_classification(self):
     if self.s_bp < 120 and self.d_bp < 80:
-      return 'Systolic Blood Pressure: ' + str(round(self.s_bp,2)) + ', Dystolic Blood Pressure: ' + str(round(self.d_bp,2)) + ' - Normal Blood Pressuure'
+      s = ' - Normal Blood Pressuure'
     elif self.s_dp < 129 and self.d_bp < 80:
-      return 'Systolic Blood Pressure: ' + str(round(self.s_bp,2)) + ', Dystolic Blood Pressure: ' + str(round(self.d_bp,2)) + ' - Elevated Blood Pressure'
+      s = ' - Elevated Blood Pressure'
     elif self._bp < 139 and self.d_bp < 89:
-      return 'Systolic Blood Pressure: ' + str(round(self.s_bp,2)) + ', Dystolic Blood Pressure: ' + str(round(self.d_bp,2)) + ' - High Blood Pressure (Hypertension) - Stage 1'
+      s = ' - High Blood Pressure (Hypertension) - Stage 1'
     elif self.s_bp < 180 and self.d_bp < 120:
-      return 'Systolic Blood Pressure: ' + str(round(self.s_bp,2)) + ', Dystolic Blood Pressure: ' + str(round(self.d_bp,2)) + ' - High Blood Pressure (Hypertension) - Stage 2'
+      s = ' - High Blood Pressure (Hypertension) - Stage 2'
     else:
-      return 'Systolic Blood Pressure: ' + str(round(self.s_bp,2)) + ', Dystolic Blood Pressure: ' + str(round(self.d_bp,2)) + ' - High Blood Pressure (Hypertension) - Stage 3'
+      s = ' - High Blood Pressure (Hypertension) - Stage 3'
+    return 'Systolic Blood Pressure: ' + str(round(self.s_bp,2)) + ', Dystolic Blood Pressure: ' + str(round(self.d_bp,2)) + s
 
     
   # overloading operators
@@ -77,18 +84,19 @@ class Patient(Person):
 
 # class instantiation
 p1 = Person('John', 'Doe', 'male', 45)
-print(p1.fullname())
+# print(p1.fullname())
 
-p2 = Patient(p1.fname, p1.lname, p1.gender, p1.age, 907895390, 70, 1.85, 37, 119, 75, 70)
+p2 = Patient(p1.fname, p1.lname, p1.gender, p1.age, 907895390, 70, 1.85, 37, 119, 75, 70, {})
 print(p2) # finally calls __str__
-print(p2.ID)
-print(p2.BMI)
-print(p2.btemp_classification)
-print(p2.bp_classification)
-print('Pulse: ' + str(p2.pulse) + ' BPM')
+# print(p2.ID)
+print(' ' + p2.BMI)
+print(' ' + p2.btemp_classification)
+print(' ' + p2.bp_classification)
+print(' Pulse: ' + str(p2.pulse) + ' BPM')
 
 # parsing input - we can use to parse CSV 
 print()
 pe_str = 'Simran-Moolchandaney-female-20'
 new_pe = Person.from_string(pe_str)
 print(new_pe.fullname())
+
