@@ -8,28 +8,29 @@ class Person:
     self.gender = gender
     self.age = age
 
-  def fullname(self):
-    return '{} {}'.format(self.fname, self.lname)
-
-
   # class method as alternative constructor
   @classmethod
   def from_string(cls, pe_str):
-    fname, lname, gender, age = pe_str.split('-') 
+    fname, lname, gender, age = pe_str.split(',') 
     return cls(fname, lname, gender, age)
   
 # class inheritance 
 class Patient(Person):
-  def __init__(self, fname, lname, gender, age, ID, weight, height, btemp, s_bp, d_bp, pulse, cdict):
+  def __init__(self, paID=0, fname="John", lname="Doe", gender="other", age=0, weight=0, height=0, btemp=0.0, s_bp=0, d_bp=0, pulse=0):
     super().__init__(fname, lname, gender, age) # single inheritance
-    Patient.ID = ID
+    Patient.paID = paID
     Patient.height = height
     Patient.weight = weight
     Patient.btemp = btemp
     Patient.s_bp = s_bp
     Patient.d_bp = d_bp
     Patient.pulse = pulse
-    Patient.cdict = {}
+
+# class method as alternative constructor
+  @classmethod
+  def from_string(cls, pe_str):
+    paID, fname, lname, gender, age, weight, height, btemp, s_bp, d_bp, pulse = pe_str.split(',') 
+    return cls(paID, fname, lname, gender, age, weight, height, btemp, s_bp, d_bp, pulse)
   
   @property
   def BMI(self):
@@ -73,6 +74,12 @@ class Patient(Person):
     else:
       s = ' - High Blood Pressure (Hypertension) - Stage 3'
     return 'Systolic Blood Pressure: ' + str(round(self.s_bp,2)) + ', Dystolic Blood Pressure: ' + str(round(self.d_bp,2)) + s
+  
+  @classmethod
+  def resSum(cls):
+    print("BMI classification: " + str(cls.BMI))
+    print("Body Temperature Range: " + str(cls.btemp_classification))
+    print("Blood Pressure Range: " + str(cls.bp_classification))
 
     
   # overloading operators
@@ -80,23 +87,12 @@ class Patient(Person):
     return "Patient('{}', '{}', {})".format(self.fname, self.lname, self.age)
 
   def __str__(self):
-    return '{} - {}'.format(self.fullname(), self.ID)
+    return '{}, {} - Patient ID: {}'.format(self.lname, self.fname, self.paID)
 
-# class instantiation
+
 p1 = Person('John', 'Doe', 'male', 45)
 # print(p1.fullname())
 
-p2 = Patient(p1.fname, p1.lname, p1.gender, p1.age, 907895390, 70, 1.85, 37, 119, 75, 70, {})
-print(p2) # finally calls __str__
-# print(p2.ID)
-print(' ' + p2.BMI)
-print(' ' + p2.btemp_classification)
-print(' ' + p2.bp_classification)
-print(' Pulse: ' + str(p2.pulse) + ' BPM')
+p2 = Patient(p1.fname, p1.lname, p1.gender, p1.age, 907895390, 70, 1.85, 37, 119, 75, 70)
 
-# parsing input - we can use to parse CSV 
-print()
-pe_str = 'Simran-Moolchandaney-female-20'
-new_pe = Person.from_string(pe_str)
-print(new_pe.fullname())
-
+p2.resSum()
